@@ -127,3 +127,21 @@ import logging
 
 logger = logging.getLogger(__name__)
 logger.warning(f"DEBUG={DEBUG}, ALLOWED_HOSTS={ALLOWED_HOSTS}")
+
+
+import dj_database_url
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(default=DATABASE_URL)
+    }
+else:
+    # fallback to SQLite locally
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
