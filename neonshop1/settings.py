@@ -19,13 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret")
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = False
 
-ALLOWED_HOSTS = [
-    "neonshop.onrender.com",  # your Render domain
-    "localhost",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = ["neonshop.onrender.com", "localhost", "127.0.0.1"]
+
 
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
