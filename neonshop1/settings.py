@@ -16,9 +16,17 @@ LOGOUT_REDIRECT_URL = "/auth/login/"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-secret')
-DEBUG = True
-ALLOWED_HOSTS = ["*"]
+
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret")
+
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = [
+    ".onrender.com",   # allow Render subdomain
+    "localhost",
+    "127.0.0.1",
+    # later: "yourdomain.com"
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
