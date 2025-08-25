@@ -1,0 +1,337 @@
+/* ========== NEONSHOP THEME (futuristic / glass / glow) ========== */
+:root{
+  --bg:#0B0F14; --fg:#E6E9EE; --muted:#98A2B3;
+  --teal:#21C7D9; --teal-deep:#177E89;
+  --magenta:#FF4FA3; --magenta-deep:#C81E77;
+  --mustard:#F5B700;
+  --glass: rgba(255,255,255,0.06);
+  --stroke: rgba(255,255,255,0.12);
+  --shadow: 0 10px 40px rgba(0,0,0,.35);
+}
+
+/* Base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial;
+  color:var(--fg);
+  background:
+    radial-gradient(1400px 600px at 15% 10%, rgba(33,199,217,.14), transparent 60%),
+    radial-gradient(1100px 500px at 85% 85%, rgba(255,79,163,.16), transparent 60%),
+    linear-gradient(180deg, #0b0f14 0%, #0c1016 100%);
+}
+
+/* Nav */
+.nav{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 24px;
+  backdrop-filter: blur(8px) saturate(1.2);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border-bottom:1px solid var(--stroke);
+}
+.brand{font-weight:800; letter-spacing:.02em}
+
+/* Containers */
+.container{max-width:960px; margin-inline:auto; padding:24px}
+.center-page{
+  min-height:calc(100dvh - 70px);
+  display:grid; place-items:center; padding:32px;
+}
+
+/* Cards (glass) */
+.card{
+  position:relative; overflow:hidden; border-radius:16px; padding:18px 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  border:1px solid var(--stroke);
+  box-shadow: var(--shadow);
+  /* ✨ frosted glass */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.card::before{
+  content:""; position:absolute; inset:-1px; border-radius:18px; pointer-events:none;
+  background: linear-gradient(120deg, rgba(33,199,217,.35), rgba(255,79,163,.35));
+  filter: blur(18px); opacity:.25;
+}
+
+/* Forms */
+label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}
+.input, select, input[type="text"], input[type="password"], input[type="email"]{
+  width:100%; padding:12px 14px; border-radius:12px; outline:none;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  color:var(--fg); margin-bottom:12px; transition:box-shadow .18s, border-color .18s;
+}
+.input:focus, select:focus, input:focus{
+  border-color: rgba(33,199,217,.6);
+  box-shadow: 0 0 0 3px rgba(33,199,217,.18), 0 0 0 1px rgba(33,199,217,.4) inset;
+}
+
+/* Buttons */
+.btn{
+  display:inline-flex; align-items:center; gap:10px; padding:10px 14px;
+  border-radius:12px; border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+  color:var(--fg); cursor:pointer; transition:transform .15s, box-shadow .15s, background .2s;
+  text-decoration:none; user-select:none;
+}
+.btn:hover{transform:translateY(-1px); box-shadow:0 14px 35px rgba(0,0,0,.45)}
+.btn:active{transform:translateY(0)}
+.btn.primary{
+  border:1px solid rgba(33,199,217,.6);
+  background: linear-gradient(135deg, rgba(33,199,217,.5), rgba(255,79,163,.45));
+  box-shadow: 0 8px 30px rgba(33,199,217,.25), 0 8px 30px rgba(255,79,163,.25);
+}
+.btn.primary:hover{
+  box-shadow: 0 10px 36px rgba(33,199,217,.35), 0 10px 36px rgba(255,79,163,.35);
+}
+
+/* Tables & grid (used later on product list) */
+.grid{
+  display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+  gap:20px; padding:24px;
+}
+.table{width:100%; border-collapse:separate; border-spacing:0 8px;}
+.table th,.table td{padding:12px 14px; color:var(--fg)}
+
+/* Product card bits (future pages) */
+.price{font-weight:800; font-size:18px; margin-top:8px}
+.badge{
+  position:absolute; top:12px; left:12px;
+  background: linear-gradient(90deg, var(--teal), var(--magenta));
+  color:white; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700;
+  box-shadow: 0 10px 30px rgba(33,199,217,.35), 0 10px 30px rgba(255,79,163,.35);
+}
+.card img{width:100%; border-radius:12px; aspect-ratio: 4/3; object-fit:cover}
+
+/* Heart */
+.heart{
+  position:absolute; top:12px; right:12px; cursor:pointer; font-size:18px;
+  background:rgba(0,0,0,.35); padding:6px 10px; border-radius:999px; user-select:none
+}
+.heart.hearted{color:var(--magenta)}
+
+/* --- NEON glow helpers for cards --- */
+.neon-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:16px;        /* matches your .card */
+}
+
+/* Soft aura around the card */
+.neon-card::before{
+  content:"";
+  position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
+  background: conic-gradient(from 180deg at 50% 50%,
+    rgba(33,199,217,.55), rgba(255,79,163,.55), rgba(33,199,217,.55));
+  filter: blur(18px);
+  opacity:.32;
+  z-index:-1;
+}
+
+/* subtle inner neon sheen */
+.neon-card::after{
+  content:"";
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background: linear-gradient(120deg,
+    rgba(33,199,217,.18), rgba(255,79,163,.18));
+  mix-blend-mode: screen;
+  opacity:.35;
+}
+
+/* animated pulse (optional) */
+.neon-pulse{
+  animation: neonPulse 3.2s ease-in-out infinite;
+  will-change: box-shadow;
+}
+@keyframes neonPulse{
+  0%,100%{ box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+  50%{
+    box-shadow:
+      0 10px 40px rgba(0,0,0,.35),
+      0 0 30px rgba(33,199,217,.35),
+      0 0 40px rgba(255,79,163,.25);
+  }
+}
+
+/* thin neon rails on top & bottom (optional) */
+.neon-rails::before,
+.neon-rails::after{
+  content:""; position:absolute; left:-2px; right:-2px; height:2px; pointer-events:none;
+  filter: drop-shadow(0 0 8px rgba(33,199,217,.6));
+}
+.neon-rails::before{
+  top:-2px;
+  background: linear-gradient(90deg, rgba(33,199,217,0), rgba(33,199,217,.9), rgba(255,79,163,.9), rgba(255,79,163,0));
+}
+.neon-rails::after{
+  bottom:-2px;
+  background: linear-gradient(90deg, rgba(255,79,163,0), rgba(255,79,163,.9), rgba(33,199,217,.9), rgba(33,199,217,0));
+}
+
+/* neon outline around a card (no extra bars) */
+.neon-outline{
+  position:relative;
+  border-radius:16px; /* match your .card radius */
+}
+.neon-outline::after{
+  content:"";
+  position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
+
+  /* gradient stroke using masking */
+  padding:2px;
+  background: linear-gradient(90deg, #21C7D9, #FF4FA3);
+  -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;  /* Chrome/Edge */
+  mask-composite: exclude;       /* Firefox */
+
+  /* soft bloom */
+  box-shadow:
+     0 0 22px rgba(33,199,217,.45),
+     0 0 28px rgba(255,79,163,.35);
+  opacity:.9;
+}
+
+/* move section down a touch */
+.push-down-md { padding-top: 14vh; }
+@media (max-width: 640px){ .push-down-md{ padding-top: 10vh; } }
+
+/* ===================== */
+/*  Animated Bubbles FX  */
+/* ===================== */
+
+/* wrapper that holds bubbles behind a card */
+.has-bubbles{ position:relative; }
+.has-bubbles .bubble-layer{
+  position:absolute; inset:-80px; pointer-events:none; overflow:hidden; z-index:0;
+  filter: blur(4px); /* soften the shapes */
+}
+.has-bubbles .card{ position:relative; z-index:1; }
+
+/* each bubble */
+.bubble{
+  position:absolute; bottom:-120px; border-radius:50%;
+  width: clamp(10px, 2.2vw, 26px); height: clamp(10px, 2.2vw, 26px);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(255,255,255,0) 55%),
+    radial-gradient(circle at 60% 60%, rgba(33,199,217,.6), rgba(33,199,217,.15) 70%),
+    radial-gradient(circle at 40% 70%, rgba(255,79,163,.55), rgba(255,79,163,.1) 70%);
+  opacity:.55;
+  transform: translate3d(0,0,0) scale(var(--s,1));
+  left: var(--x, 50%);
+  animation: bubbleRise var(--dur, 14s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* float upwards */
+@keyframes bubbleRise{
+  0%   { transform: translateY(0) scale(var(--s,1)); opacity:.55; }
+  90%  { opacity:.2; }
+  100% { transform: translateY(-110vh) scale(calc(var(--s,1) + .35)); opacity:0; }
+}
+
+/* --- FORCE VISIBLE NEON OUTLINE ON CARDS --- */
+.neon-outline{
+  position: relative;
+  overflow: visible !important;     /* override .card's overflow:hidden */
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.08),   /* thin inner stroke */
+    0 0 22px rgba(33,199,217,.22),
+    0 0 28px rgba(255,79,163,.18);     /* base halo so it shows even without ::after */
+}
+
+/* outside glow, extends beyond the card */
+.neon-outline::after{
+  content:"";
+  position:absolute; inset:-8px; border-radius:inherit; pointer-events:none;
+  background: linear-gradient(90deg, #21C7D9, #FF4FA3);
+  filter: blur(14px);
+  opacity:.85;
+  z-index: -1;                         /* sits behind the card content */
+}
+
+/* optional gentle pulsing */
+.neon-pulse{ animation: neonPulse 3s ease-in-out infinite; }
+@keyframes neonPulse{
+  0%,100%{
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.08),
+      0 0 22px rgba(33,199,217,.22),
+      0 0 28px rgba(255,79,163,.18);
+  }
+  50%{
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.10),
+      0 0 30px rgba(33,199,217,.34),
+      0 0 40px rgba(255,79,163,.28);
+  }
+}
+
+.bubble-canvas {
+  position:absolute; inset:-40px; width:calc(100% + 80px); height:calc(100% + 80px);
+  pointer-events:none; z-index:0; filter: blur(6px);
+}
+.has-bubbles .card { position:relative; z-index:1; }
+
+/* Full-page bubble background */
+#bubble-bg{
+  position: fixed; inset: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 0;                 /* sit behind your UI */
+  filter: blur(8px);          /* soft neon glow */
+}
+
+/* Make sure UI sits above the canvas */
+.nav, .container, .card { position: relative; z-index: 1; }
+
+
+/* transparent (ghost) button */
+.btn-ghost{
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.btn-ghost:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.15);
+}
+
+.product-detail .card{ max-width: 980px; margin: 24px auto; }
+.product-detail .hero-img{
+  width:100%;
+  height:clamp(260px, 52vh, 520px);
+  object-fit:cover;
+  border-radius:12px;
+}
+
+/* Product detail: let dropdown render outside the card */
+.product-detail .card{ overflow: visible; }
+
+/* Make sure the select sits above the image/content */
+.product-detail select.input{
+  position: relative;
+  z-index: 10;
+}
+
+/* Improve option list contrast (supported in most modern browsers) */
+.product-detail select.input option{
+  background: #0c1117;      /* dark panel */
+  color: var(--fg);         /* your light text */
+}
+.product-detail select.input option:checked{
+  background: rgba(33,199,217,.25);
+}
+
+/* Soften native option highlights (works in Chromium/most modern browsers) */
+.input option:checked {
+  background: rgba(33,199,217,.18) !important; /* teal glow-ish */
+  color: var(--fg);
+}
+.input option:hover {
+  background: rgba(255,79,163,.22) !important; /* magenta hover */
+  color: var(--fg);
+}

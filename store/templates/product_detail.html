@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container product-detail">
+  <div class="card">
+    <div class="row">
+      <!-- GALLERY -->
+      <div>
+        <div id="gallery" class="gallery">
+          <!-- images injected by JS -->
+        {% if p.main_image %}
+          <img class="hero-img" src="{{ p.main_image.url }}" alt="{{ p.main_image.alt|default:p.title }}">
+        {% else %}
+          <img class="hero-img" src="{% static 'img/placeholder.png' %}" alt="No image available">
+        {% endif %}
+      </div>
+      </div>
+
+      <!-- INFO -->
+      <div>
+        <h2 style="margin-top:0">{{ p.title }}</h2>
+        <p style="color:#98A2B3">{{ p.description }}</p>
+
+        <!-- color swatches -->
+        <div class="swatches" id="color-swatches">
+          {% for c in colors %}
+            <button type="button" class="swatch" data-color="{{ c }}">{{ c }}</button>
+          {% endfor %}
+        </div>
+
+        <form id="add-to-cart-form" method="post">
+          {% csrf_token %}
+          <label for="variant">Size</label>
+          <select id="variant" name="variant_id" class="input" required>
+            <option value="" disabled selected hidden>Choose size</option>
+          </select>
+
+          <button id="add-to-cart-btn" class="btn primary" type="submit">Add to cart</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- data for JS -->
+{{ variant_map|json_script:"variant-map" }}
+{{ images_map|json_script:"images-map" }}
+
+<script>
+  // ---------- helpers ----------
+  const centsToMoney = (c) => {
+    // change currency if needed
+    return new Intl.NumberFormat('en-US', { style:'currency', currency:'EUR' })
+      .format((c || 0) / 100);
+  };
+
+  const vmap = JSON.parse(document.getElementById('variant-map').textContent);
+  const imap = JSON.parse(document.getElementById('images-map').textContent);
+  const colors = Object.keys(vmap);
+  let currentColor = colors[0] || 'One';
+
+  const sel = document.getElementById('variant');
+  const swatches = document.getElementById('color-swatches');
+  const gallery = document.getElementById('gallery');
+  const btn = document.getElementById('add-to-cart-btn');
+
+  function renderSizes() {
+  sel.innerHTML = '<option value="" disabled selected hidden>Choose size</option>';
+  const options = vmap[normalizeColor(currentColor)] || [];
+  for (const v of options) {
+    const label = (v.size || 'One size') + ' — ' + centsToMoney(v.price) + ` (${v.stock} in stock)`;
+    const opt = new Option(label, v.id);
+    sel.add(opt);
+  }
+}
+
+function renderGallery() {
+  const imgs = imap[normalizeColor(currentColor)] || [];
+  gallery.innerHTML = imgs.map(i => `
+    <img class="hero-img" src="${i.url}" alt="${i.alt || ''}">
+  `).join('') || `<img class="hero-img" src="/static/img/placeholder.png" alt="{{ p.title }}">`;
+}
+
+function normalizeColor(c) {
+  return (c || "One").trim().toLowerCase();
+}
+
+function renderSizes() {
+  sel.innerHTML = '<option value="" disabled selected hidden>Choose size</option>';
+  const options = vmap[normalizeColor(currentColor)] || [];
+  for (const v of options) {
+    const label = (v.size || 'One size') + ' — ' + centsToMoney(v.price) + ` (${v.stock} in stock)`;
+    const opt = new Option(label, v.id);
+    sel.add(opt);
+  }
+}
+
+function renderGallery() {
+  const imgs = imap[normalizeColor(currentColor)] || [];
+  gallery.innerHTML = imgs.map(i => `
+    <img class="hero-img" src="${i.url}" alt="${i.alt || ''}">
+  `).join('') || `<img class="hero-img" src="/static/img/placeholder.png" alt="{{ p.title }}">`;
+}
+
+  function updateFormAction() {
+    const id = sel.value;
+    if (!id) return;
+    btn.setAttribute('formaction', "{% url 'add_to_cart' 0 %}".replace('/0/', `/${id}/`));
+  }
+
+  // swatch behavior
+  swatches.addEventListener('click', (e) => {
+    const b = e.target.closest('.swatch');
+    if (!b) return;
+    currentColor = b.dataset.color;
+    for (const x of swatches.querySelectorAll('.swatch')) x.classList.toggle('active', x===b);
+    renderSizes();
+    renderGallery();
+    // clear selection highlight
+    sel.selectedIndex = 0;
+    updateFormAction();
+  });
+
+  // dropdown behaviors
+  const clearPreselect = () => { if (!sel.value) sel.selectedIndex = -1; };
+  sel.addEventListener('mousedown', clearPreselect);
+  sel.addEventListener('pointerdown', clearPreselect, {passive:true});
+  sel.addEventListener('touchstart', clearPreselect, {passive:true});
+  sel.addEventListener('focus', clearPreselect);
+  sel.addEventListener('change', () => { updateFormAction(); sel.blur(); });
+
+  // init
+  // mark first swatch active
+  const firstSwatch = swatches.querySelector('[data-color="'+CSS.escape(currentColor)+'"]') || swatches.firstElementChild;
+  if (firstSwatch) firstSwatch.classList.add('active');
+  renderSizes();
+  renderGallery();
+  updateFormAction();
+</script>
+
+<style>
+  .swatches { display:flex; gap:8px; margin:12px 0 10px }
+  .swatch{
+    padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.15);
+    background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+    color:var(--fg); cursor:pointer;
+  }
+  .swatch.active{
+    border-color: rgba(33,199,217,.6);
+    box-shadow:0 0 0 3px rgba(33,199,217,.18);
+  }
+.gallery .hero-img {
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  object-fit: contain;
+
+  border-radius: 16px;              /* round corners */
+  box-shadow: 0 4px 30px rgba(0,0,0,0.4); /* soft shadow */
+  background: rgba(255,255,255,0.02);     /* slight blend bg */
+  backdrop-filter: blur(6px);       /* smooth blending effect */
+  -webkit-backdrop-filter: blur(6px);
+
+  margin: 0 auto;
+  display: block;
+}
+</style>
+
+
+{% endblock %}

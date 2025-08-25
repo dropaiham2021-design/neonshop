@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load currency %}
+{% block content %}
+<div class="container">
+  <div class="card">
+    <h3>Create account</h3>
+    <form method="post">{% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn" type="submit">Sign up</button>
+    </form>
+    <p style="color:#98A2B3">A QR invite is required. We’ll email a verification link.</p>
+  </div>
+</div>
+{% endblock %}

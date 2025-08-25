@@ -1,0 +1,11 @@
+<!-- store/templates/qr_invite.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="text-align:center">
+  <h3>Scan to join</h3>
+  <p style="color:#98A2B3">{{ target_url }}</p>
+  <img width="240" height="240"
+       src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data={{ target_url|urlencode }}"
+       alt="QR">
+</div>
+{% endblock %}

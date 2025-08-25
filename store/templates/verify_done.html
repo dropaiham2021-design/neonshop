@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load currency %}
+{% block content %}
+<div class="container"><div class="card">
+  <h3>Email verified</h3>
+  <p>You can log in now.</p>
+  <a class="btn" href="{% url 'login' %}">Login</a>
+</div></div>
+{% endblock %}

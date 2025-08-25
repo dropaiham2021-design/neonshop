@@ -1,0 +1,75 @@
+{% load static %}
+{% load currency %}
+<!DOCTYPE html>
+<canvas id="bubble-bg" aria-hidden="true"></canvas>
+<html lang="en">
+<head>
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta charset="UTF-8" />
+  <title>NEONSHOP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- EXACTLY this: single quotes and NO dots -->
+  <link href="{% static 'store/styles.css' %}" rel="stylesheet" />
+</head>
+<body>
+<meta name="csrf-token" content="{{ csrf_token }}">
+  <div class="nav">
+    <a class="btn btn-ghost" href="{% url 'home' %}">NEONSHOP ⚡</a>
+    <div>
+      {% if user.is_authenticated %}
+        <a class="btn btn-ghost" href="{% url 'cart' %}">🛒 Cart</a>
+        <a class="btn btn-ghost" href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a class="btn btn-ghost" href="{% url 'login' %}">Login</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if messages %}
+    <div class="container">
+      {% for m in messages %}
+        <div class="card" style="border-left:3px solid {% if m.tags == 'error' %}#ff4d4f{% else %}#21C7D9{% endif %}">{{ m }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</body>
+</html>
+<script defer src="{% static 'store/bubbles-parallax.js' %}"></script>
+
+<script>
+  // ---- CSRF helper (works with cookie or <meta>) ----
+  function getCookie(name) {
+    const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return m ? m.pop() : '';
+  }
+  const CSRF = getCookie('csrftoken') ||
+               (document.querySelector('meta[name=csrf-token]')?.content || '');
+
+  // ---- Click handler for all .heart buttons (event delegation) ----
+  document.addEventListener('click', async (e) => {
+    const heart = e.target.closest('.heart');
+    if (!heart) return;
+
+    const id = heart.dataset.id;
+    try {
+      const res = await fetch(`/heart/${id}/toggle/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': CSRF }
+      });
+      if (!res.ok) {
+        // Optional: show a nicer message
+        alert('Error');
+        return;
+      }
+      const data = await res.json();
+      heart.classList.toggle('hearted', data.hearted);
+      const span = heart.querySelector('span');
+      if (span) span.textContent = data.count;
+    } catch (err) {
+      console.error(err);
+      alert('Error');
+    }
+  });
+</script>

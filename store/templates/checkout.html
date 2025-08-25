@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load currency %}
+{% block content %}
+<div class="container">
+  <div class="card">
+    <h3>Checkout</h3>
+    {% if not order %}
+      <form method="post">
+        {% csrf_token %}
+        {{ address_form.as_p }}
+        <button class="btn" type="submit">Continue</button>
+      </form>
+    {% else %}
+      <p>Order #{{ order.id }} — Total (incl. VAT): <b>{{ order.gross_total|floatformat:-2 }} €</b></p>
+      <div class="row">
+        <a class="btn" href="{% url 'stripe_create_checkout' %}">Pay with Card / Apple Pay / Google Pay (Stripe)</a>
+        <button class="btn" id="paypalBtn">Pay with PayPal</button>
+        <a class="btn" href="{% url 'coinbase_create_charge' %}">Pay with Bitcoin (Coinbase)</a>
+      </div>
+      <small style="color:#98A2B3">We’ll enable shipping fees later; pickup or shipping arranged post-purchase.</small>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+async function createPaypalOrder(){
+  const res = await fetch("{% url 'paypal_create_order' %}");
+  const data = await res.json();
+  return data.id;
+}
+async function capturePaypalOrder(orderId){
+  const res = await fetch("{% url 'paypal_capture_order' 'ORDER' %}".replace('ORDER', orderId));
+  const data = await res.json();
+  if(data.ok){ window.location = "{% url 'order_success' order.id %}"; }
+}
+document.getElementById('paypalBtn')?.addEventListener('click', async ()=>{
+  try{
+    const id = await createPaypalOrder();
+    alert("Redirecting to PayPal sandbox popup is omitted in this minimal demo.\nCapturing directly...");
+    await capturePaypalOrder(id);
+  }catch(e){ alert("PayPal error"); }
+});
+</script>
+{% endblock %}

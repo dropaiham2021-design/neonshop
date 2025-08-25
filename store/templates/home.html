@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load currency %}
+{% load static %}
+{% block content %}
+<div class="grid">
+  {% for p in products %}
+  <div class="card product-card">
+    <div class="badge">NEW</div>
+
+    {% if p.main_image %}
+      <img src="{{ p.main_image.url }}" alt="{{ p.main_image.alt }}">
+    {% else %}
+      <img src="https://picsum.photos/seed/{{ p.id }}/800/600" alt="">
+    {% endif %}
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px">
+      <div>
+        <div class="title">{{ p.title }}</div>
+
+        {% with v=p.variants.first %}
+          {% if v %}
+            {% with cents=v.price_gross_cents %}
+              {% if cents %}
+                <div class="price">{{ cents|money_plain }}€</div>
+              {% endif %}
+            {% endwith %}
+          {% endif %}
+        {% endwith %}
+
+      </div>
+      <div>
+        <a class="btn btn-ghost" href="{% url 'product_detail' p.slug %}">View</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+    <div class="container">No products yet.</div>
+  {% endfor %}
+</div>
+{% endblock %}

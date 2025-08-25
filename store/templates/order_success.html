@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load currency %}
+{% block content %}
+<div class="container">
+  <div class="card">
+    <h2>Thank you!</h2>
+    <p>Your order <b>#{{ order.id }}</b> is <b>{{ order.status }}</b>.</p>
+    <p>Total paid: <b>{{ order.gross_total|floatformat:-2 }} €</b></p>
+    <a class="btn" href="{% url 'home' %}">Back to shop</a>
+  </div>
+</div>
+{% endblock %}

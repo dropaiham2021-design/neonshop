@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% load currency %}
+{% block content %}
+
+<!-- Full-page bubbles -->
+<canvas id="bubble-bg" aria-hidden="true"></canvas>
+
+<div class="container" style="max-width: 500px; margin:18vh auto 0;">
+  <div class="card neon-outline neon-pulse">
+    <h3>Login</h3>
+    <form method="post">{% csrf_token %}
+      <label>Username</label>
+      <input class="input" name="username">
+
+      <label>Password</label>
+      <input class="input" type="password" name="password">
+
+      <button class="btn primary" type="submit">Login</button>
+    </form>
+    <p style="margin-top:10px;color:#98A2B3">
+      New? You need a QR invite to sign up.
+    </p>
+  </div>
+</div>
+
+<script defer src="{% static 'store/bubbles-parallax.js' %}"></script>
+{% endblock %}
