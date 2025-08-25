@@ -116,3 +116,9 @@ DATABASES = {
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+
+import logging
+
+logger = logging.getLogger(__name__)
+logger.warning(f"DEBUG={DEBUG}, ALLOWED_HOSTS={ALLOWED_HOSTS}")
