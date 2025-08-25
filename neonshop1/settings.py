@@ -22,7 +22,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-    "neonshop.onrender.com",
+    "neonshop.onrender.com",  # your Render domain
     "localhost",
     "127.0.0.1",
 ]
