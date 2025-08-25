@@ -104,9 +104,14 @@ PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID", "")
 PAYPAL_SECRET = os.getenv("PAYPAL_SECRET", "")
 COINBASE_API_KEY = os.getenv("COINBASE_API_KEY", "")
 
+
 DEBUG = False
 
-ALLOWED_HOSTS = ["your-app-name.onrender.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "neonshop.onrender.com",   # real domain
+    "localhost",
+    "127.0.0.1",
+]
 
 DATABASES = {
     "default": dj_database_url.config(
